@@ -16,10 +16,10 @@ def JACCARD_seq(file1, file2):
 
 
 # 중복되는 데이터가 있는지 검색하는 함수
-def Search_unique(data, unique_array, arr_count):
-	for i in range(0, arr_count):
+def Search_unique(data, unique_array):
+	for i in range(0, len(unique_array)):
 		if (data == unique_array[i]):
-			return True
+			return True # 중복이 있으면 참 반환
 	return False
 
 
@@ -27,6 +27,7 @@ def Search_unique(data, unique_array, arr_count):
 def JaccardSim(Xarr, fileNum, type):
     # 자카드 파일비교를 위한 배열 생성
     JACCARD_all = [[0 for col in range(len(Xarr))] for row in range(len(Xarr))]
+    JACCARD_unique_array = []
 
     # 자카드 파일비교
     for i in range(0, len(Xarr)):
@@ -39,59 +40,50 @@ def JaccardSim(Xarr, fileNum, type):
             elif (i > j): # 어자피 i < j랑 값이 같으니 최적화를 위해서 0행렬 처리
                 JACCARD_all[i][j] = JACCARD_seq(Xarr[i], Xarr[j])
 
-    JACCARD_rank = [[0 for col in range(len(Xarr))] for row in range(len(Xarr))]
-    unique_count = 0
-
     if type == 0:
-        for i in range(0, len(Xarr)):
-            for j in range(0, len(Xarr)):
-                JACCARD_rank[0].append(JACCARD_all[i][j])
-
         # 배열에 중복된값 제거 (ex: 0...)
         for i in range(0, len(Xarr)):
-            JACCARD_unique = []
             for j in range(0, len(Xarr)):
-                if (not Search_unique(JACCARD_all[i][j], JACCARD_unique, unique_count)):
-                    JACCARD_unique.append(JACCARD_all[i][j])
-                    JACCARD_rank[i][unique_count] = JACCARD_all[i][j]
-                    unique_count = unique_count + 1
-            unique_count = 0
+                if not Search_unique(JACCARD_all[i][j], JACCARD_unique_array):
+                    JACCARD_unique_array.append(JACCARD_all[i][j])
 
         # 정렬(내림차순)
-        JACCARD_rank.sort(reverse=True)
+        JACCARD_unique_array.sort(reverse=True)
 
+        # 최종 자카드 배열 만들기
+        JACCARD_ROW = np.zeros((fileNum, fileNum))
+        for i in range(0, len(Xarr)):
+            for j in range(0, len(Xarr)):
+                if (i > j):
+                    if (JACCARD_all[i][j] >= JACCARD_unique_array[gcn_main.JaccardTop]):
+                        JACCARD_ROW[i][j] = 1
+                elif (i < j):
+                    if (JACCARD_all[i][j] >= JACCARD_unique_array[gcn_main.JaccardTop]):
+                        JACCARD_ROW[i][j] = 1
 
 
     elif type == 1:
-        JACCARD_rank = [[0 for col in range(len(Xarr))] for row in range(len(Xarr))]
-        for i in range(0, len(Xarr)):
-            for j in range(0, len(Xarr)):
-                JACCARD_rank[i][j] = JACCARD_all[i][j]
-
         # 배열에 중복된값 제거 (ex: 0...)
         for i in range(0, len(Xarr)):
-            JACCARD_unique = []
+            JACCARD_unique_array.append([])
             for j in range(0, len(Xarr)):
-                if (not Search_unique(JACCARD_all[i][j], JACCARD_unique, unique_count)):
-                    JACCARD_unique.append(JACCARD_all[i][j])
-                    JACCARD_rank[i][unique_count] = JACCARD_all[i][j]
-                    unique_count = unique_count + 1
-            unique_count = 0
+                if not Search_unique(JACCARD_all[i][j], JACCARD_unique_array):
+                    JACCARD_unique_array[i].append(JACCARD_all[i][j])
 
         # 정렬(내림차순)
-        for a in range(0, len(JACCARD_rank)):
-            JACCARD_rank[a].sort(reverse=True)
+        for i in range(0, len(JACCARD_unique_array)):
+            JACCARD_unique_array[i].sort(reverse=True)
 
-    # 최종 자카드 배열 만들기
-    JACCARD_ROW = np.zeros((fileNum, fileNum))
-    for i in range(0, len(Xarr)):
-        for j in range(0, len(Xarr)):
-            if (i > j):
-                if (JACCARD_all[i][j] >= JACCARD_rank[i][gcn_main.JaccardTop]):
-                    JACCARD_ROW[i][j] = 1
-            elif (i < j):
-                if (JACCARD_all[i][j] >= JACCARD_rank[i][gcn_main.JaccardTop]):
-                    JACCARD_ROW[i][j] = 1
+        # 최종 자카드 배열 만들기
+        JACCARD_ROW = np.zeros((fileNum, fileNum))
+        for i in range(0, len(Xarr)):
+            for j in range(0, len(Xarr)):
+                if (i > j):
+                    if (JACCARD_all[i][j] >= JACCARD_unique_array[i][gcn_main.JaccardTop]):
+                        JACCARD_ROW[i][j] = 1
+                elif (i < j):
+                    if (JACCARD_all[i][j] >= JACCARD_unique_array[i][gcn_main.JaccardTop]):
+                        JACCARD_ROW[i][j] = 1
 
     return JACCARD_ROW
 
