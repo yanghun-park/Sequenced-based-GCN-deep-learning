@@ -16,7 +16,6 @@ https://github.com/yanghun-park/Sequence-to-Frequency-Converter
 - Basic : Basic GCN Deep Learning (Identity Matrix)
 - Jacquard : GCN deep learning after performing a similarity of Jacquard
 - Frequency : GCN Deep-Learning with Frequency Data and Identity Matrix/Jacquard Similarity
-- Attention : GCN deep-learning using attention mechanism (preparing...)
 
 
 ### Recommand System
@@ -54,7 +53,6 @@ https://github.com/yanghun-park/Sequence-to-Frequency-Converter
 - Main(Basic) : 기본적인 GCN 딥-러닝 (Identity Matrix)
 - Jacquard : 자카드 유사도를 사용하여 GCN 딥-러닝 진행
 - Frequency : 프리퀀시 데이터와 Identity Matrix/자카드 유사도를 사용하여 GCN 딥-러닝
-- Attention : 어텐션 메커니즘을 사용하여 GCN 딥-러닝 (준비중...)
 
 
 ### 권장사항
