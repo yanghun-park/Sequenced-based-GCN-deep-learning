@@ -109,9 +109,14 @@ def deeplearningMain(select):
     JACCARD_ROW = []
     A = []
 
-    if select == 2 or select == 3: # 시퀀스 데이터에 자카드 유사도 사용시
+    # 시퀀스 데이터에 자카드 유사도 사용시
+    if select == 2: # 전체
         JACCARD_ROW = gcn_jaccard.JaccardSim(Xarr, fileNum, 0)
-    elif select == 5 or select == 6: # 프리퀀시 데이터에 자카드 유사도 사용시
+    if select == 3: # 한행
+        JACCARD_ROW = gcn_jaccard.JaccardSim(Xarr, fileNum, 1)
+        
+        
+    if select == 5 or select == 6: # 프리퀀시 데이터에 자카드 유사도 사용시
         Xarr_seq, yTotal_seq, fileNum_seq = gcn_dataprocess.fileRead_Xarr(Normal_seq, Attack_seq, 1)
 
         if select == 5: # 전체
